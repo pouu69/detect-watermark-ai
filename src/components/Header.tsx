@@ -10,7 +10,7 @@ function Header({ darkMode, toggleDarkMode }: HeaderProps) {
     <header className="header">
       <div className="container">
         <div className="header-top">
-          <h1 className="logo">WatermarkDetect AI</h1>
+          <h1 className="logo">GPT 워터마크 탐지기</h1>
           <button 
             className="theme-toggle" 
             onClick={toggleDarkMode}
