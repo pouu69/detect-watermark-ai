@@ -17,7 +17,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
   }
 
   error_document {
-    key = "index.html"  # SPA를 위한 설정
+    key = "index.html" # SPA를 위한 설정
   }
 }
 
@@ -73,11 +73,11 @@ resource "aws_cloudfront_distribution" "website" {
     cache_policy_id          = "658327ea-f89d-4fab-a63d-7e88639e58f6" # CachingOptimized
     origin_request_policy_id = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf" # CORS-S3Origin
 
-    min_ttl                = 0
-    default_ttl            = 86400    # 1일
-    max_ttl                = 31536000 # 1년
+    min_ttl     = 0
+    default_ttl = 86400    # 1일
+    max_ttl     = 31536000 # 1년
   }
-  
+
   # SPA를 위한 오류 페이지 설정
   custom_error_response {
     error_code            = 403
@@ -85,17 +85,17 @@ resource "aws_cloudfront_distribution" "website" {
     response_page_path    = "/index.html"
     error_caching_min_ttl = 10
   }
-  
+
   custom_error_response {
     error_code            = 404
     response_code         = 200
     response_page_path    = "/index.html"
     error_caching_min_ttl = 10
   }
-  
+
   # 도메인 설정 (사용자 지정 도메인 없이 CloudFront 기본 도메인 사용)
   # aliases = [var.domain_name, "www.${var.domain_name}"]
-  
+
   # SSL 인증서 설정 (CloudFront 기본 인증서 사용)
   viewer_certificate {
     cloudfront_default_certificate = true
@@ -212,12 +212,12 @@ data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.website.arn}/*"]
-    
+
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
     }
-    
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
@@ -244,7 +244,7 @@ resource "aws_s3_bucket" "terraform_state" {
 # Terraform 상태 버킷 버전 관리 설정
 resource "aws_s3_bucket_versioning" "terraform_state" {
   bucket = aws_s3_bucket.terraform_state.id
-  
+
   versioning_configuration {
     status = "Enabled"
   }
@@ -266,12 +266,12 @@ resource "aws_dynamodb_table" "terraform_locks" {
   name         = "${var.project_name}-terraform-locks"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
-  
+
   attribute {
     name = "LockID"
     type = "S"
   }
-  
+
   tags = {
     Name        = "${var.project_name} Terraform 잠금 테이블"
     Environment = var.environment
