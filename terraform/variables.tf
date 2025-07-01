@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS 리전"
   type        = string
-  default     = "ap-northeast-2"  # 서울 리전
+  default     = "ap-northeast-2" # 서울 리전
 }
 
 variable "domain_name" {

@@ -1,7 +1,7 @@
 # S3 버킷 설정
 resource "aws_s3_bucket" "website" {
   bucket = "${var.project_name}-website-${var.environment}"
-  
+
   tags = {
     Name        = "${var.project_name} 웹사이트"
     Environment = var.environment
@@ -34,7 +34,7 @@ resource "aws_s3_bucket_public_access_block" "website" {
 # S3 버킷 소유권 설정
 resource "aws_s3_bucket_ownership_controls" "website" {
   bucket = aws_s3_bucket.website.id
-  
+
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
@@ -54,25 +54,25 @@ resource "aws_cloudfront_distribution" "website" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
-  price_class         = "PriceClass_100"  # 북미, 유럽만 사용 (비용 최적화)
-  
+  price_class         = "PriceClass_100" # 북미, 유럽만 사용 (비용 최적화)
+
   origin {
     domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
     origin_id                = "S3-${aws_s3_bucket.website.id}"
     origin_access_control_id = aws_cloudfront_origin_access_control.website.id
   }
-  
+
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
     target_origin_id       = "S3-${aws_s3_bucket.website.id}"
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
-    
+
     # CachingOptimized 정책 사용
-    cache_policy_id          = "658327ea-f89d-4fab-a63d-7e88639e58f6"  # CachingOptimized
-    origin_request_policy_id = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf"  # CORS-S3Origin
-    
+    cache_policy_id          = "658327ea-f89d-4fab-a63d-7e88639e58f6" # CachingOptimized
+    origin_request_policy_id = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf" # CORS-S3Origin
+
     min_ttl                = 0
     default_ttl            = 86400    # 1일
     max_ttl                = 31536000 # 1년
@@ -103,13 +103,13 @@ resource "aws_cloudfront_distribution" "website" {
     # ssl_support_method       = "sni-only"
     # minimum_protocol_version = "TLSv1.2_2021"
   }
-  
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
     }
   }
-  
+
   tags = {
     Name        = "${var.project_name} CloudFront"
     Environment = var.environment
@@ -229,12 +229,12 @@ data "aws_iam_policy_document" "s3_policy" {
 # Terraform 상태 파일을 저장할 S3 버킷 (초기 설정용)
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "${var.project_name}-terraform-state"
-  
+
   tags = {
     Name        = "${var.project_name} Terraform 상태 버킷"
     Environment = var.environment
   }
-  
+
   # 이미 생성된 경우 Terraform에서 관리하지 않음
   lifecycle {
     prevent_destroy = true
@@ -253,7 +253,7 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
 # Terraform 상태 버킷 서버 측 암호화 설정
 resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
   bucket = aws_s3_bucket.terraform_state.id
-  
+
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"

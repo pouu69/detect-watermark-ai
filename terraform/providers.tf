@@ -14,5 +14,5 @@ provider "aws" {
 
 provider "aws" {
   alias  = "us-east-1"
-  region = "us-east-1"  # CloudFront용 ACM 인증서는 us-east-1에 있어야 함
+  region = "us-east-1" # CloudFront용 ACM 인증서는 us-east-1에 있어야 함
 }
