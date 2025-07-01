@@ -228,6 +228,7 @@ data "aws_iam_policy_document" "s3_policy" {
 
 # Terraform 상태 파일을 저장할 S3 버킷 (초기 설정용)
 resource "aws_s3_bucket" "terraform_state" {
+  count  = 0 # 이미 존재하므로 생성하지 않음 (Skip 처리)
   bucket = "${var.project_name}-terraform-state"
 
   tags = {
@@ -243,7 +244,8 @@ resource "aws_s3_bucket" "terraform_state" {
 
 # Terraform 상태 버킷 버전 관리 설정
 resource "aws_s3_bucket_versioning" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
+  count  = 0 # 상위 리소스가 skip되므로 이것도 skip
+  bucket = "${var.project_name}-terraform-state"
 
   versioning_configuration {
     status = "Enabled"
@@ -252,7 +254,8 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
 
 # Terraform 상태 버킷 서버 측 암호화 설정
 resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
-  bucket = aws_s3_bucket.terraform_state.id
+  count  = 0 # 상위 리소스가 skip되므로 이것도 skip
+  bucket = "${var.project_name}-terraform-state"
 
   rule {
     apply_server_side_encryption_by_default {
@@ -263,6 +266,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" 
 
 # Terraform 상태 잠금을 위한 DynamoDB 테이블
 resource "aws_dynamodb_table" "terraform_locks" {
+  count        = 0 # 이미 존재하므로 생성하지 않음 (Skip 처리)
   name         = "${var.project_name}-terraform-locks"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
