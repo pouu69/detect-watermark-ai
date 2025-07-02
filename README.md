@@ -169,7 +169,9 @@ git push origin main
 
 배포가 완료되면 다음 URL에서 웹사이트에 접속할 수 있습니다:
 
-- CloudFront 도메인: `https://<cloudfront-distribution-id>.cloudfront.net`
+- CloudFront 도메인: `https://d39svrmmc9o0pz.cloudfront.net`
+
+이 URL은 이미 배포가 완료되어 사용 가능합니다. 직접 접속하여 GPT 워터마크 탐지기를 사용해보세요!
 
 Terraform 출력에서 `website_url` 값을 확인하여 정확한 URL을 얻을 수 있습니다:
 
