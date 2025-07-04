@@ -5,6 +5,15 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      invalidate_cache:
+        description: 'CloudFront 캐시 무효화 실행 여부'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   terraform:
@@ -46,8 +55,17 @@ jobs:
       - name: Export Terraform Outputs
         working-directory: ./terraform
         run: |
-          S3_BUCKET=$(terraform output -raw website_bucket_name)
-          CLOUDFRONT_DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)
+          # 디버그 출력을 제거하고 순수한 값만 추출
+          S3_BUCKET=$(terraform output -raw website_bucket_name | grep -v "::debug::" || echo "")
+          CLOUDFRONT_DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id | grep -v "::debug::" || echo "")
+          
+          # 값이 비어있지 않은지 확인
+          if [ -z "$S3_BUCKET" ] || [ -z "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+            echo "Error: Failed to extract Terraform outputs"
+            exit 1
+          fi
+          
+          # GitHub 환경 변수로 설정
           echo "S3_BUCKET=${S3_BUCKET}" >> $GITHUB_ENV
           echo "CLOUDFRONT_DISTRIBUTION_ID=${CLOUDFRONT_DISTRIBUTION_ID}" >> $GITHUB_ENV
   
@@ -85,4 +103,5 @@ jobs:
         run: aws s3 sync dist/ s3://${{ env.S3_BUCKET }} --delete
       
       - name: Invalidate CloudFront Cache
+        if: ${{ github.event.inputs.invalidate_cache != 'false' }}
         run: aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
