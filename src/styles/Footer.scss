@@ -34,6 +34,25 @@
       font-size: var(--font-size-sm);
       line-height: 1.6;
       opacity: 0.9;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-sm);
+      
+      .footer-link {
+        color: var(--primary-color-light);
+        text-decoration: none;
+        font-size: var(--font-size-sm);
+        transition: color 0.2s ease;
+        
+        &:hover, &:focus {
+          color: white;
+          text-decoration: underline;
+        }
+      }
     }
   }
   
@@ -43,12 +62,40 @@
       font-weight: 600;
       margin-bottom: var(--spacing-sm);
       color: var(--primary-color-light);
+      margin-top: 0;
     }
     
     .contact-email {
       font-size: var(--font-size-sm);
       line-height: 1.6;
       opacity: 0.9;
+      margin-bottom: var(--spacing-md);
+      
+      .email-link {
+        color: var(--primary-color-light);
+        text-decoration: none;
+        transition: color 0.2s ease;
+        
+        &:hover, &:focus {
+          color: white;
+          text-decoration: underline;
+        }
+      }
+    }
+    
+    .keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+      margin-top: var(--spacing-md);
+      
+      .keyword {
+        font-size: var(--font-size-xs);
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: 20px;
+        opacity: 0.7;
+      }
     }
   }
 }
@@ -61,6 +108,14 @@
     .footer-left, .footer-right {
       width: 100%;
       margin-bottom: var(--spacing-md);
+    }
+    
+    .footer-links {
+      justify-content: center;
+    }
+    
+    .keywords {
+      justify-content: center;
     }
   }
 }

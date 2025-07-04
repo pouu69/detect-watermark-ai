@@ -120,7 +120,7 @@ jobs:
       
       - name: Set Environment Variables
         run: |
-          echo "S3_BUCKET=gpt-watermark-detector-website-production" >> $GITHUB_ENV
+          echo "S3_BUCKET=gpt-scan-website-production" >> $GITHUB_ENV
           echo "CLOUDFRONT_DISTRIBUTION_ID=E1Q999HROOUN29" >> $GITHUB_ENV
       
       - name: Deploy to S3

@@ -7,13 +7,13 @@ variable "aws_region" {
 variable "domain_name" {
   description = "웹사이트 도메인 이름"
   type        = string
-  default     = "gpt-watermark-detector.com"
+  default     = "gpt-scan.org"
 }
 
 variable "project_name" {
   description = "프로젝트 이름"
   type        = string
-  default     = "gpt-watermark-detector"
+  default     = "gpt-scan"
 }
 
 variable "environment" {
