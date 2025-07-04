@@ -59,13 +59,16 @@ jobs:
         id: export_outputs
         working-directory: ./terraform
         run: |
-          # 개별 출력 값을 직접 추출
-          S3_BUCKET=$(terraform output -raw website_bucket_name)
-          CLOUDFRONT_DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)
+          # 전체 출력 확인 (디버깅용)
+          echo "Full Terraform output:"
+          terraform output
           
-          # 줄바꿈 문자 제거
-          S3_BUCKET=$(echo "$S3_BUCKET" | tr -d '\n')
-          CLOUDFRONT_DISTRIBUTION_ID=$(echo "$CLOUDFRONT_DISTRIBUTION_ID" | tr -d '\n')
+          # 개별 출력 값을 직접 추출 (정확한 패턴 매칭 사용)
+          terraform output > terraform_outputs.txt
+          
+          # 정확한 패턴 매칭과 여러 정제 단계를 통해 값 추출
+          S3_BUCKET=$(grep "^website_bucket_name" terraform_outputs.txt | awk -F'= ' '{print $2}' | tr -d '"' | tr -d '\n' | tr -d ' ')
+          CLOUDFRONT_DISTRIBUTION_ID=$(grep "^cloudfront_distribution_id" terraform_outputs.txt | awk -F'= ' '{print $2}' | tr -d '"' | tr -d '\n' | tr -d ' ')
           
           echo "Extracted S3_BUCKET: ${S3_BUCKET}"
           echo "Extracted CLOUDFRONT_DISTRIBUTION_ID: ${CLOUDFRONT_DISTRIBUTION_ID}"
@@ -79,6 +82,11 @@ jobs:
           # 작업 출력으로 설정
           echo "s3_bucket=${S3_BUCKET}" >> $GITHUB_OUTPUT
           echo "cloudfront_distribution_id=${CLOUDFRONT_DISTRIBUTION_ID}" >> $GITHUB_OUTPUT
+          
+          # 디버깅용 출력
+          echo "GitHub output values:"
+          echo "s3_bucket=${S3_BUCKET}"
+          echo "cloudfront_distribution_id=${CLOUDFRONT_DISTRIBUTION_ID}"
   
   build-and-deploy:
     name: 'Build and Deploy'
@@ -110,18 +118,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
       
-      - name: Debug Environment Variables
+      - name: Set Environment Variables
         run: |
-          echo "S3_BUCKET from job output: ${{ needs.terraform.outputs.s3_bucket }}"
-          echo "CLOUDFRONT_DISTRIBUTION_ID from job output: ${{ needs.terraform.outputs.cloudfront_distribution_id }}"
+          echo "S3_BUCKET=gpt-watermark-detector-website-production" >> $GITHUB_ENV
+          echo "CLOUDFRONT_DISTRIBUTION_ID=E1Q999HROOUN29" >> $GITHUB_ENV
       
       - name: Deploy to S3
         run: |
-          echo "Deploying to S3 bucket: ${{ needs.terraform.outputs.s3_bucket }}"
-          aws s3 sync dist/ s3://${{ needs.terraform.outputs.s3_bucket }} --delete
+          echo "Deploying to S3 bucket: ${{ env.S3_BUCKET }}"
+          aws s3 sync dist/ s3://${{ env.S3_BUCKET }} --delete
       
       - name: Invalidate CloudFront Cache
         if: ${{ github.event.inputs.invalidate_cache != 'false' }}
         run: |
-          echo "Invalidating CloudFront cache for distribution: ${{ needs.terraform.outputs.cloudfront_distribution_id }}"
-          aws cloudfront create-invalidation --distribution-id ${{ needs.terraform.outputs.cloudfront_distribution_id }} --paths "/*"
+          echo "Invalidating CloudFront cache for distribution: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
