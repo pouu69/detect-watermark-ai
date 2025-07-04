@@ -59,16 +59,13 @@ jobs:
         id: export_outputs
         working-directory: ./terraform
         run: |
-          # 디버그 메시지 출력
-          echo "Terraform outputs:"
-          terraform output
+          # 개별 출력 값을 직접 추출
+          S3_BUCKET=$(terraform output -raw website_bucket_name)
+          CLOUDFRONT_DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)
           
-          # 출력을 파일로 저장
-          terraform output > terraform_outputs.txt
-          
-          # 파일에서 값 추출
-          S3_BUCKET=$(grep "website_bucket_name" terraform_outputs.txt | awk -F'= ' '{print $2}' | tr -d '"' | tr -d ' ')
-          CLOUDFRONT_DISTRIBUTION_ID=$(grep "cloudfront_distribution_id" terraform_outputs.txt | awk -F'= ' '{print $2}' | tr -d '"' | tr -d ' ')
+          # 줄바꿈 문자 제거
+          S3_BUCKET=$(echo "$S3_BUCKET" | tr -d '\n')
+          CLOUDFRONT_DISTRIBUTION_ID=$(echo "$CLOUDFRONT_DISTRIBUTION_ID" | tr -d '\n')
           
           echo "Extracted S3_BUCKET: ${S3_BUCKET}"
           echo "Extracted CLOUDFRONT_DISTRIBUTION_ID: ${CLOUDFRONT_DISTRIBUTION_ID}"
@@ -78,10 +75,6 @@ jobs:
             echo "Error: Failed to extract Terraform outputs"
             exit 1
           fi
-          
-          # GitHub 환경 변수로 설정
-          echo "S3_BUCKET=${S3_BUCKET}" >> $GITHUB_ENV
-          echo "CLOUDFRONT_DISTRIBUTION_ID=${CLOUDFRONT_DISTRIBUTION_ID}" >> $GITHUB_ENV
           
           # 작업 출력으로 설정
           echo "s3_bucket=${S3_BUCKET}" >> $GITHUB_OUTPUT
@@ -119,23 +112,16 @@ jobs:
       
       - name: Debug Environment Variables
         run: |
-          echo "S3_BUCKET from env: ${{ env.S3_BUCKET }}"
-          echo "CLOUDFRONT_DISTRIBUTION_ID from env: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
           echo "S3_BUCKET from job output: ${{ needs.terraform.outputs.s3_bucket }}"
           echo "CLOUDFRONT_DISTRIBUTION_ID from job output: ${{ needs.terraform.outputs.cloudfront_distribution_id }}"
       
-      - name: Set Environment Variables
-        run: |
-          echo "S3_BUCKET=${{ needs.terraform.outputs.s3_bucket }}" >> $GITHUB_ENV
-          echo "CLOUDFRONT_DISTRIBUTION_ID=${{ needs.terraform.outputs.cloudfront_distribution_id }}" >> $GITHUB_ENV
-      
       - name: Deploy to S3
         run: |
-          echo "Deploying to S3 bucket: ${{ env.S3_BUCKET }}"
-          aws s3 sync dist/ s3://${{ env.S3_BUCKET }} --delete
+          echo "Deploying to S3 bucket: ${{ needs.terraform.outputs.s3_bucket }}"
+          aws s3 sync dist/ s3://${{ needs.terraform.outputs.s3_bucket }} --delete
       
       - name: Invalidate CloudFront Cache
         if: ${{ github.event.inputs.invalidate_cache != 'false' }}
         run: |
-          echo "Invalidating CloudFront cache for distribution: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          echo "Invalidating CloudFront cache for distribution: ${{ needs.terraform.outputs.cloudfront_distribution_id }}"
+          aws cloudfront create-invalidation --distribution-id ${{ needs.terraform.outputs.cloudfront_distribution_id }} --paths "/*"
