@@ -92,8 +92,8 @@ OG 이미지는 Facebook, Twitter, KakaoTalk 등의 소셜 미디어에서 링�
 
 1. 저장소 클론
    ```bash
-   git clone https://github.com/yourusername/gpt-watermark-detector.git
-   cd gpt-watermark-detector
+   git clone https://github.com/pouu69/detect-watermark-ai.git
+   cd detect-watermark-ai
    ```
 
 2. 의존성 설치
@@ -182,17 +182,7 @@ cd terraform
    - `AWS_ACCESS_KEY_ID`: 액세스 키 ID
    - `AWS_SECRET_ACCESS_KEY`: 시크릿 액세스 키
 
-#### 3. 도메인 설정 (선택 사항)
-
-현재 설정은 사용자 지정 도메인 없이 CloudFront의 기본 도메인(*.cloudfront.net)을 사용합니다. 나중에 사용자 지정 도메인을 추가하려면:
-
-1. `terraform/main.tf` 파일에서 주석 처리된 ACM 인증서 및 Route53 관련 리소스의 주석을 해제
-2. CloudFront 배포 설정에서 aliases 및 viewer_certificate 부분의 주석을 해제
-3. `terraform/outputs.tf` 파일에서 name_servers 출력 값의 주석을 해제
-4. `terraform/variables.tf` 파일에서 `domain_name` 변수 값을 수정
-5. Terraform 적용 후 Route53에서 제공하는 네임서버를 도메인 등록 대행사에 설정
-
-#### 4. GitHub Actions 워크플로우 활성화
+#### 3. GitHub Actions 워크플로우 활성화
 
 GitHub 저장소에 코드를 푸시하면 자동으로 배포 워크플로우가 실행됩니다:
 
@@ -202,10 +192,11 @@ git commit -m "Initial AWS deployment setup"
 git push origin main
 ```
 
-#### 5. 배포 확인
+#### 4. 배포 확인
 
 배포가 완료되면 다음 URL에서 웹사이트에 접속할 수 있습니다:
 
+- 서비스 주소: `http://gpt-scan.org`
 - CloudFront 도메인: `https://d39svrmmc9o0pz.cloudfront.net`
 
 이 URL은 이미 배포가 완료되어 사용 가능합니다. 직접 접속하여 GPT 워터마크 탐지기를 사용해보세요!
@@ -252,5 +243,5 @@ terraform destroy
 ## 📞 연락처
 
 - 개발자: pouu69@gmail.com
-- 프로젝트 저장소: [GitHub](https://github.com/yourusername/gpt-watermark-detector)
-- 이슈 보고: [GitHub Issues](https://github.com/yourusername/gpt-watermark-detector/issues)
+- 프로젝트 저장소: [GitHub](https://github.com/pouu69/detect-watermark-ai)
+- 이슈 보고: [GitHub Issues](https://github.com/pouu69/detect-watermark-ai/issues)
