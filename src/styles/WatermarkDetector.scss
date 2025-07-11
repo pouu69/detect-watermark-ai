@@ -1,3 +1,5 @@
+@import './_mixins.scss';
+
 .watermark-detector {
   .text-area-container {
     margin-bottom: var(--spacing-lg);
@@ -8,18 +10,48 @@
       align-items: center;
       margin-bottom: var(--spacing-xs);
       font-size: 0.9rem;
+      flex-wrap: wrap;
       
       .char-count {
         font-weight: 500;
         
         &.text-warning {
-          color: #e74c3c;
+          color: var(--danger-color);
+        }
+        
+        @include respond-to('xs') {
+          font-size: var(--font-size-xs);
+          width: 100%;
+          margin-bottom: var(--spacing-xs);
         }
       }
       
       .min-chars-notice {
-        color: #666;
+        color: var(--secondary-color);
         font-style: italic;
+        
+        @include respond-to('xs') {
+          font-size: var(--font-size-xs);
+          width: 100%;
+        }
+      }
+      
+      @include respond-to('xs') {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    
+    textarea {
+      height: 200px;
+      
+      @include respond-to('sm') {
+        height: 180px;
+      }
+      
+      @include respond-to('xs') {
+        height: 150px;
+        font-size: var(--font-size-sm);
       }
     }
   }
@@ -29,9 +61,18 @@
     justify-content: flex-end;
     gap: var(--spacing-md);
     
-    @media (max-width: 768px) {
+    @include respond-to('sm') {
       flex-direction: column;
       align-items: stretch;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+    }
+    
+    button {
+      @include respond-to('sm') {
+        padding-left: 0;
+        padding-right: 0;
+      }
     }
   }
 }

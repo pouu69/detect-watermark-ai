@@ -182,7 +182,7 @@ function ResultDisplay({
               )}
             </h3>
             <button
-              className="copy-button"
+              className="copy-button touch-target"
               onClick={() => copyToClipboard(originalText, "original")}
             >
               {copiedText === "original"
@@ -196,7 +196,7 @@ function ResultDisplay({
               {/* 결과 탭 메뉴 */}
               <div className="result-tabs">
                 <button
-                  className={`result-tab ${
+                  className={`result-tab touch-target tap-highlight ${
                     resultTab === "basic" ? "active" : ""
                   }`}
                   onClick={() => setResultTab("basic")}
@@ -204,7 +204,7 @@ function ResultDisplay({
                   {t("result.basicTab")}
                 </button>
                 <button
-                  className={`result-tab ${
+                  className={`result-tab touch-target tap-highlight ${
                     resultTab === "detailed" ? "active" : ""
                   }`}
                   onClick={() => setResultTab("detailed")}
@@ -642,7 +642,7 @@ function ResultDisplay({
                 : t("result.noWatermarkToRemove")}
             </h3>
             <button
-              className="copy-button"
+              className="copy-button touch-target"
               onClick={() => copyToClipboard(cleanedText, "cleaned")}
             >
               {copiedText === "cleaned"
@@ -657,7 +657,7 @@ function ResultDisplay({
                 <h4>{t("result.originalText")}</h4>
                 <div
                   ref={originalTextRef}
-                  className="text-content diff-view"
+                  className="text-content diff-view smooth-scroll"
                   dangerouslySetInnerHTML={{
                     __html: generateDiffHtml(originalText),
                   }}
@@ -665,7 +665,7 @@ function ResultDisplay({
               </div>
               <div className="text-panel">
                 <h4>{t("result.cleanedText")}</h4>
-                <div ref={cleanedTextRef} className="text-content">
+                <div ref={cleanedTextRef} className="text-content smooth-scroll">
                   {cleanedText}
                 </div>
               </div>

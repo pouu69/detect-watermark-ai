@@ -57,7 +57,7 @@ function WatermarkRemover({
 
       <div className="button-group">
         <button
-          className="btn btn-primary"
+          className="btn btn-primary touch-target"
           onClick={handleRemove}
           disabled={isLoading || !inputText.trim()}
         >

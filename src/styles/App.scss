@@ -1,3 +1,6 @@
+@import './_mixins.scss';
+@import './_components.scss';
+
 .app-container {
   display: flex;
   flex-direction: column;
@@ -49,45 +52,7 @@
   margin-bottom: var(--spacing-xl);
 }
 
-.result-section {
-  margin-top: var(--spacing-xl);
-  
-  h2 {
-    margin-bottom: var(--spacing-md);
-    font-size: var(--font-size-xl);
-    color: var(--dark-gray);
-  }
-}
-
-.result-card {
-  background-color: var(--card-bg);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--box-shadow-sm);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
-  
-  .result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-    
-    h3 {
-      font-size: var(--font-size-lg);
-      color: var(--dark-gray);
-    }
-  }
-  
-  .result-content {
-    margin-bottom: var(--spacing-md);
-  }
-  
-  .result-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--spacing-md);
-  }
-}
+// .result-section, .result-card 스타일은 _components.scss로 이동됨
 
 .text-area-container {
   margin-bottom: var(--spacing-lg);
@@ -161,7 +126,7 @@
   gap: var(--spacing-lg);
   margin-top: var(--spacing-lg);
   
-  @media (max-width: 768px) {
+  @include respond-to('sm') {
     grid-template-columns: 1fr;
   }
   
@@ -186,27 +151,7 @@
   }
 }
 
-.copy-button {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  background-color: var(--light-gray);
-  color: var(--dark-gray);
-  border: none;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background-color: #dde0e3; /* 약간 더 어두운 회색 */
-  }
-  
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(74, 107, 255, 0.25);
-  }
-}
+// .copy-button 스타일은 _components.scss로 이동됨
 
 .no-results {
   text-align: center;

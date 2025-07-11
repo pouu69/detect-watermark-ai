@@ -103,7 +103,7 @@ function WatermarkDetector({
 
       <div className="button-group">
         <button
-          className="btn btn-primary"
+          className="btn btn-primary touch-target"
           onClick={handleDetect}
           disabled={isLoading || !inputText.trim() || inputText.trim().length < MIN_TEXT_LENGTH}
         >
@@ -111,7 +111,7 @@ function WatermarkDetector({
         </button>
         
         <button
-          className="btn btn-secondary"
+          className="btn btn-secondary touch-target"
           onClick={() => {
             if (!inputText.trim()) {
               alert(t("detector.placeholder"));

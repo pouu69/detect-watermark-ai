@@ -35,35 +35,37 @@ function Header({ darkMode, toggleDarkMode }: HeaderProps) {
               {t("header.title")}
             </a>
           </h1>
-          <button
-            className="theme-toggle"
-            onClick={toggleDarkMode}
-            aria-label={darkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
-            title={darkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
-          >
-            {darkMode ? (
-              <span className="light-icon" aria-hidden="true">
-                ☀️
-              </span>
-            ) : (
-              <span className="dark-icon" aria-hidden="true">
-                🌙
-              </span>
-            )}
-          </button>
-          <button
-            className="lang-toggle"
-            onClick={toggleLanguage}
-            aria-label={language === "ko" ? "Switch to English" : "한국어로 전환"}
-            title={language === "ko" ? "Switch to English" : "한국어로 전환"}
-          >
-            {language === "ko" ? "EN" : "KO"}
-          </button>
+          <div className="header-controls">
+            <button
+              className="theme-toggle touch-target"
+              onClick={toggleDarkMode}
+              aria-label={darkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
+              title={darkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
+            >
+              {darkMode ? (
+                <span className="light-icon" aria-hidden="true">
+                  ☀️
+                </span>
+              ) : (
+                <span className="dark-icon" aria-hidden="true">
+                  🌙
+                </span>
+              )}
+            </button>
+            <button
+              className="lang-toggle touch-target"
+              onClick={toggleLanguage}
+              aria-label={language === "ko" ? "Switch to English" : "한국어로 전환"}
+              title={language === "ko" ? "Switch to English" : "한국어로 전환"}
+            >
+              {language === "ko" ? "EN" : "KO"}
+            </button>
+          </div>
         </div>
-        <h2 className="description">
+        <h2 className="description text-no-adjust">
           {t("header.subtitle")}
         </h2>
-        <p className="seo-text">
+        <p className="seo-text text-no-adjust">
           {t("header.description")}
         </p>
       </div>

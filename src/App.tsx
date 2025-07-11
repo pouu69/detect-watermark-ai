@@ -66,13 +66,13 @@ function App() {
       <main className="main-content">
         <div className="tabs">
           <button
-            className={`tab ${activeTab === "detect" ? "active" : ""}`}
+            className={`tab touch-target tap-highlight ${activeTab === "detect" ? "active" : ""}`}
             onClick={() => setActiveTab("detect")}
           >
             {t("tabs.detect")}
           </button>
           <button
-            className={`tab ${activeTab === "remove" ? "active" : ""}`}
+            className={`tab touch-target tap-highlight ${activeTab === "remove" ? "active" : ""}`}
             onClick={() => setActiveTab("remove")}
           >
             {t("tabs.remove")}
