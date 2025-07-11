@@ -23,10 +23,8 @@ output "cloudfront_domain_name" {
   value       = aws_cloudfront_distribution.website.domain_name
 }
 
-# 도메인 설정 시 아래 주석을 해제하고 사용하세요
-/*
+# Route53 네임서버 출력
 output "name_servers" {
   description = "Route53 네임서버"
-  value       = aws_route53_zone.primary.name_servers
+  value       = data.aws_route53_zone.primary.name_servers
 }
-*/

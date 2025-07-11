@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { detectWatermarks, DetectionResult, generateWatermarkedText } from "../utils/watermarkUtils";
 import "../styles/WatermarkDetector.scss";
 
@@ -14,6 +15,7 @@ function WatermarkDetector({
   onDetectionResult,
 }: WatermarkDetectorProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onInputChange(e.target.value);
@@ -21,7 +23,7 @@ function WatermarkDetector({
 
   const handleDetect = () => {
     if (!inputText.trim()) {
-      alert("텍스트를 입력해주세요.");
+      alert(t("detector.placeholder"));
       return;
     }
 
@@ -67,12 +69,12 @@ function WatermarkDetector({
   return (
     <div className="watermark-detector">
       <div className="text-area-container">
-        <label htmlFor="input-text">분석할 텍스트 붙여넣기</label>
+        <label htmlFor="input-text">{t("detector.placeholder")}</label>
         <textarea
           id="input-text"
           value={inputText}
           onChange={handleInputChange}
-          placeholder="GPT 모델로 생성된 텍스트인지 확인하려면 여기에 붙여넣으세요."
+          placeholder={t("detector.placeholder")}
         />
       </div>
 
@@ -82,7 +84,7 @@ function WatermarkDetector({
           onClick={handleDetect}
           disabled={isLoading || !inputText.trim()}
         >
-          {isLoading ? "분석 중..." : "텍스트 분석하기"}
+          {isLoading ? "분석 중..." : t("detector.button")}
         </button>
         
         <button
@@ -132,12 +134,12 @@ function WatermarkDetector({
                 }
               }, 500);
             } else {
-              alert("텍스트를 먼저 입력해주세요.");
+              alert(t("detector.placeholder"));
             }
           }}
           disabled={isLoading || !inputText.trim()}
         >
-          테스트용 워터마크 추가
+          {t("detector.removeButton")}
         </button>
       </div>
     </div>

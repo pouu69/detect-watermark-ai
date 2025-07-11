@@ -1,35 +1,36 @@
 import "../styles/Footer.scss";
+import { useTranslation } from "react-i18next";
 
 interface FooterProps {}
 
 function Footer({}: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const { t } = useTranslation();
   
   return (
     <footer className="footer" role="contentinfo">
       <div className="container">
         <div className="footer-left">
-          <p className="copyright">© {currentYear} GPT 워터마크 탐지기</p>
+          <p className="copyright">© {currentYear} {t("header.title")}</p>
           <p className="description">
-            텍스트에 숨겨진 워터마크를 감지하여 AI 생성 콘텐츠를 정확하게
-            식별하는 고급 분석 도구입니다.
+            {t("footer.description")}
           </p>
           <div className="footer-links">
-            <a href="/privacy" className="footer-link">개인정보처리방침</a>
-            <a href="/terms" className="footer-link">이용약관</a>
+            <a href="/privacy.html" className="footer-link">{t("footer.privacy")}</a>
+            <a href="/terms.html" className="footer-link">{t("footer.terms")}</a>
           </div>
         </div>
 
         <div className="footer-right">
-          <h3 className="contact-title">제작 및 문의</h3>
+          <h3 className="contact-title">{t("footer.contact")}</h3>
           <p className="contact-email">
-            개발: <a href="mailto:pouu69@gmail.com" className="email-link">pouu69@gmail.com</a>
+            {t("footer.developer")}: <a href="mailto:pouu69@gmail.com" className="email-link">pouu69@gmail.com</a>
           </p>
           <div className="keywords" aria-hidden="true">
-            <span className="keyword">AI 텍스트 감지</span>
-            <span className="keyword">워터마크 탐지</span>
-            <span className="keyword">ChatGPT 감지</span>
-            <span className="keyword">AI 콘텐츠 식별</span>
+            <span className="keyword">{t("footer.keyword1")}</span>
+            <span className="keyword">{t("footer.keyword2")}</span>
+            <span className="keyword">{t("footer.keyword3")}</span>
+            <span className="keyword">{t("footer.keyword4")}</span>
           </div>
         </div>
       </div>

@@ -93,15 +93,15 @@ resource "aws_cloudfront_distribution" "website" {
     error_caching_min_ttl = 10
   }
 
-  # 도메인 설정 (사용자 지정 도메인 없이 CloudFront 기본 도메인 사용)
-  # aliases = [var.domain_name, "www.${var.domain_name}"]
+  # 도메인 설정 (사용자 지정 도메인 사용)
+  aliases = [var.domain_name, "www.${var.domain_name}"]
 
-  # SSL 인증서 설정 (CloudFront 기본 인증서 사용)
+  # SSL 인증서 설정 (ACM 인증서 사용)
   viewer_certificate {
-    cloudfront_default_certificate = true
-    # acm_certificate_arn      = aws_acm_certificate.website.arn
-    # ssl_support_method       = "sni-only"
-    # minimum_protocol_version = "TLSv1.2_2021"
+    cloudfront_default_certificate = false
+    acm_certificate_arn      = aws_acm_certificate.website.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
   restrictions {
@@ -115,12 +115,10 @@ resource "aws_cloudfront_distribution" "website" {
     Environment = var.environment
   }
 
-  # 인증서 검증 의존성 제거 (CloudFront 기본 인증서 사용)
-  # depends_on = [aws_acm_certificate_validation.website]
+  # 인증서 검증 의존성 추가 (ACM 인증서 사용)
+  depends_on = [aws_acm_certificate_validation.website]
 }
 
-# 도메인 설정 시 아래 주석을 해제하고 사용하세요
-/*
 # ACM 인증서 설정
 resource "aws_acm_certificate" "website" {
   provider = aws.us-east-1  # CloudFront는 us-east-1 리전의 인증서만 사용 가능
@@ -139,14 +137,9 @@ resource "aws_acm_certificate" "website" {
   }
 }
 
-# Route53 영역 설정
-resource "aws_route53_zone" "primary" {
-  name = var.domain_name
-  
-  tags = {
-    Name        = "${var.project_name} 도메인"
-    Environment = var.environment
-  }
+# 기존 Route53 영역 참조
+data "aws_route53_zone" "primary" {
+  zone_id = "Z01199363GS66E02YFLSQ"  # 도메인 등록 시 자동으로 생성된 호스팅 영역 ID
 }
 
 # ACM 인증서 검증을 위한 DNS 레코드 설정
@@ -159,7 +152,7 @@ resource "aws_route53_record" "website_validation" {
     }
   }
 
-  zone_id = aws_route53_zone.primary.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = each.value.name
   type    = each.value.type
   records = [each.value.record]
@@ -176,7 +169,7 @@ resource "aws_acm_certificate_validation" "website" {
 
 # Route53 A 레코드 설정 (apex 도메인)
 resource "aws_route53_record" "website_a" {
-  zone_id = aws_route53_zone.primary.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = var.domain_name
   type    = "A"
 
@@ -189,7 +182,7 @@ resource "aws_route53_record" "website_a" {
 
 # Route53 A 레코드 설정 (www 서브도메인)
 resource "aws_route53_record" "website_www" {
-  zone_id = aws_route53_zone.primary.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = "www.${var.domain_name}"
   type    = "A"
 
@@ -199,7 +192,6 @@ resource "aws_route53_record" "website_www" {
     evaluate_target_health = false
   }
 }
-*/
 
 # S3 버킷 정책 설정
 resource "aws_s3_bucket_policy" "website" {

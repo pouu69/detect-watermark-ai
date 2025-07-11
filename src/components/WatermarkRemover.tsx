@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { removeWatermarks } from "../utils/watermarkUtils";
 import "../styles/WatermarkRemover.scss";
 
@@ -14,6 +15,7 @@ function WatermarkRemover({
   onRemovalResult,
 }: WatermarkRemoverProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onInputChange(e.target.value);
@@ -21,7 +23,7 @@ function WatermarkRemover({
 
   const handleRemove = () => {
     if (!inputText.trim()) {
-      alert("텍스트를 입력해주세요.");
+      alert(t("remover.placeholder"));
       return;
     }
 
@@ -44,12 +46,12 @@ function WatermarkRemover({
   return (
     <div className="watermark-remover">
       <div className="text-area-container">
-        <label htmlFor="input-text-remove">워터마크 제거할 텍스트 붙여넣기</label>
+        <label htmlFor="input-text-remove">{t("remover.placeholder")}</label>
         <textarea
           id="input-text-remove"
           value={inputText}
           onChange={handleInputChange}
-          placeholder="AI 생성 텍스트의 워터마크를 제거하려면 여기에 붙여넣으세요."
+          placeholder={t("remover.placeholder")}
         />
       </div>
 
@@ -59,7 +61,7 @@ function WatermarkRemover({
           onClick={handleRemove}
           disabled={isLoading || !inputText.trim()}
         >
-          {isLoading ? "처리 중..." : "워터마크 제거하기"}
+          {isLoading ? "처리 중..." : t("remover.button")}
         </button>
       </div>
     </div>

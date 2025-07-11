@@ -164,7 +164,7 @@ resource "aws_wafv2_web_acl" "main" {
         }
         positional_constraint = "CONTAINS"
         search_string         = "bad-bot"
-        text_transformations {
+        text_transformation {
           priority = 0
           type     = "LOWERCASE"
         }
@@ -190,12 +190,14 @@ resource "aws_wafv2_web_acl" "main" {
   }
 }
 
-# CloudFront 배포와 WAF 연결
+# CloudFront 배포와 WAF 연결 (비활성화)
+/*
 resource "aws_wafv2_web_acl_association" "main" {
   provider     = aws.us-east-1
   resource_arn = aws_cloudfront_distribution.website.arn
   web_acl_arn  = aws_wafv2_web_acl.main.arn
 }
+*/
 
 # WAF 로깅 설정 (선택 사항)
 resource "aws_s3_bucket" "waf_logs" {
@@ -227,8 +229,11 @@ resource "aws_s3_bucket_public_access_block" "waf_logs" {
   restrict_public_buckets = true
 }
 
+# WAF 로깅 설정 (비활성화)
+/*
 resource "aws_wafv2_web_acl_logging_configuration" "main" {
   provider               = aws.us-east-1
-  log_destination_configs = [aws_s3_bucket.waf_logs.arn]
+  log_destination_configs = ["${aws_s3_bucket.waf_logs.arn}/"]
   resource_arn            = aws_wafv2_web_acl.main.arn
 }
+*/

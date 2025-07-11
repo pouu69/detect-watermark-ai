@@ -476,7 +476,7 @@ export const generateDiffHtml = (originalText: string): string => {
     diffHtml += originalText.substring(lastPosition, watermark.position);
     
     // 워터마크에 하이라이트 추가
-    diffHtml += `<span class="removed-watermark" title="제거된 워터마크: ${watermark.description} (${watermark.unicode})">${watermark.char}</span>`;
+    diffHtml += `<span class="removed-watermark" title="${i18next.t('watermark.removedWatermark')}: ${watermark.description} (${watermark.unicode})">${watermark.char}</span>`;
     
     // 다음 시작 위치 업데이트 (워터마크 다음 위치)
     lastPosition = watermark.position + 1;
@@ -488,21 +488,23 @@ export const generateDiffHtml = (originalText: string): string => {
   return diffHtml;
 };
 
+import i18next from 'i18next';
+
 /**
- * 워터마크 유형에 따른 한글 이름 반환
+ * 워터마크 유형에 따른 이름 반환
  * @param type 워터마크 유형
- * @returns 한글 이름
+ * @returns 이름
  */
 export const getWatermarkTypeName = (type: WatermarkType): string => {
   switch (type) {
     case 'zeroWidth':
-      return '제로 너비 문자';
+      return i18next.t('watermark.zeroWidth');
     case 'specialSpace':
-      return '특수 공백';
+      return i18next.t('watermark.specialSpace');
     case 'emojiVariant':
-      return '이모지 변형 선택자';
+      return i18next.t('watermark.emojiVariant');
     default:
-      return '알 수 없는 유형';
+      return i18next.t('watermark.unknownType');
   }
 };
 

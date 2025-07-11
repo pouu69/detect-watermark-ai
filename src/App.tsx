@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import WatermarkDetector from "./components/WatermarkDetector";
 import WatermarkRemover from "./components/WatermarkRemover";
 import ResultDisplay from "./components/ResultDisplay";
@@ -56,6 +57,8 @@ function App() {
     }
   }, [cleanedText]);
 
+  const { t } = useTranslation();
+
   return (
     <div className={`app-container ${darkMode ? "dark-mode" : ""}`}>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
@@ -66,13 +69,13 @@ function App() {
             className={`tab ${activeTab === "detect" ? "active" : ""}`}
             onClick={() => setActiveTab("detect")}
           >
-            워터마크 감지
+            {t("tabs.detect")}
           </button>
           <button
             className={`tab ${activeTab === "remove" ? "active" : ""}`}
             onClick={() => setActiveTab("remove")}
           >
-            워터마크 제거
+            {t("tabs.remove")}
           </button>
         </div>
 

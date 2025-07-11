@@ -47,9 +47,7 @@
     border: 0;
   }
   
-  .theme-toggle {
-    position: absolute;
-    right: 0;
+  .theme-toggle, .lang-toggle {
     background: none;
     border: none;
     color: white;
@@ -74,6 +72,18 @@
     .light-icon, .dark-icon {
       font-size: 1.2rem;
     }
+  }
+  
+  .theme-toggle {
+    position: absolute;
+    right: 40px;
+  }
+  
+  .lang-toggle {
+    position: absolute;
+    right: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
   }
   
   .description {

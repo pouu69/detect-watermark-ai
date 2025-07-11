@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   DetectionResult,
   getWatermarkTypeName,
@@ -29,6 +30,7 @@ function ResultDisplay({
   const [resultTab, setResultTab] = useState<"basic" | "detailed">("basic");
   const [isWatermarkDetailsOpen, setIsWatermarkDetailsOpen] = useState<boolean>(false);
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const { t } = useTranslation();
   
   // 텍스트 패널에 대한 ref 생성
   const originalTextRef = useRef<HTMLDivElement>(null);
@@ -137,14 +139,14 @@ function ResultDisplay({
 
     return (
       <div className="result-section">
-        <h2>텍스트 분석 결과</h2>
+        <h2>{t("result.title")}</h2>
 
         <div className="result-card">
           <div className="result-header">
             <h3>
               {hasWatermarks ? (
                 <span className="detection-result">
-                  <span className="detection-label">GPT 작성 확률:</span>
+                  <span className="detection-label">{t("result.detected")}:</span>
                   <span
                     className={`detection-rate ${
                       detectionRate && detectionRate > 50 ? "high" : "low"
@@ -154,14 +156,14 @@ function ResultDisplay({
                   </span>
                 </span>
               ) : (
-                "AI 생성 텍스트가 아닌 것으로 판단됩니다."
+                t("result.notDetected")
               )}
             </h3>
             <button
               className="copy-button"
               onClick={() => copyToClipboard(originalText, "original")}
             >
-              {copiedText === "original" ? "복사됨!" : "텍스트 복사"}
+              {copiedText === "original" ? t("result.copied") : t("detector.button")}
             </button>
           </div>
 
@@ -173,13 +175,13 @@ function ResultDisplay({
                   className={`result-tab ${resultTab === 'basic' ? 'active' : ''}`}
                   onClick={() => setResultTab('basic')}
                 >
-                  분석 결과
+                  {t("result.basicTab")}
                 </button>
                 <button 
                   className={`result-tab ${resultTab === 'detailed' ? 'active' : ''}`}
                   onClick={() => setResultTab('detailed')}
                 >
-                  유형 분석
+                  {t("result.detailedTab")}
                 </button>
               </div>
               
@@ -188,22 +190,22 @@ function ResultDisplay({
                 <>
                   {/* 통계 정보 섹션 */}
                   <div className="analysis-section">
-                    <h4>분석 결과</h4>
+                    <h4>{t("result.analysisResult")}</h4>
                     <div className="stats-grid">
                       <div className="stat-box">
-                        <div className="stat-title">총 문자 수</div>
+                        <div className="stat-title">{t("result.totalCharCount")}</div>
                         <div className="stat-value">{detectionResult.statistics.totalCharCount.toLocaleString()}</div>
                       </div>
                       <div className="stat-box">
-                        <div className="stat-title">워터마크 수</div>
+                        <div className="stat-title">{t("result.watermarkCount")}</div>
                         <div className="stat-value">{detectionResult.statistics.watermarkCount}개</div>
                       </div>
                       <div className="stat-box">
-                        <div className="stat-title">이모지 수</div>
+                        <div className="stat-title">{t("result.emojiCount")}</div>
                         <div className="stat-value">{detectionResult.statistics.emojiCount}개</div>
                       </div>
                       <div className="stat-box">
-                        <div className="stat-title">GPT 점수</div>
+                        <div className="stat-title">{t("result.gptScore")}</div>
                         <div className="stat-value">{detectionResult.statistics.gptScore}%</div>
                       </div>
                     </div>
@@ -215,7 +217,7 @@ function ResultDisplay({
                       className="collapsible-header"
                       onClick={() => setIsWatermarkDetailsOpen(!isWatermarkDetailsOpen)}
                     >
-                      워터마크 상세 정보
+                      {t("result.watermarkDetails")}
                       <span className={`collapse-icon ${isWatermarkDetailsOpen ? 'open' : ''}`}>
                         {isWatermarkDetailsOpen ? '▼' : '▶'}
                       </span>
@@ -225,10 +227,10 @@ function ResultDisplay({
                         <table className="watermark-table">
                         <thead>
                           <tr>
-                            <th>문자</th>
-                            <th>유니코드</th>
-                            <th>이름</th>
-                            <th>위치</th>
+                            <th>{t("result.character")}</th>
+                            <th>{t("result.unicode")}</th>
+                            <th>{t("result.name")}</th>
+                            <th>{t("result.position")}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -265,13 +267,13 @@ function ResultDisplay({
                           {/* 워터마크가 없는 경우 */}
                           {totalCount === 0 && (
                             <tr>
-                              <td colSpan={4} className="no-data">워터마크가 감지되지 않았습니다.</td>
+                              <td colSpan={4} className="no-data">{t("result.noWatermarkDetected")}</td>
                             </tr>
                           )}
                         </tbody>
                         <tfoot>
                           <tr>
-                            <td colSpan={3} className="total-label">총 워터마크 수</td>
+                            <td colSpan={3} className="total-label">{t("result.totalWatermarkCount")}</td>
                             <td className="total-value">{totalCount}개</td>
                           </tr>
                         </tfoot>
@@ -282,7 +284,7 @@ function ResultDisplay({
 
                   {/* 하이라이트된 텍스트 표시 */}
                   <div className="highlighted-text">
-                    <h4>워터마크 위치 표시</h4>
+                    <h4>{t("result.watermarkPositionDisplay")}</h4>
                     <p>
                       <span
                         dangerouslySetInnerHTML={{ __html: highlightedText }}
@@ -297,14 +299,14 @@ function ResultDisplay({
                 <>
                   {/* 워터마크 유형 분석 */}
                   <div className="analysis-section">
-                    <h4>워터마크 유형 분석</h4>
+                    <h4>{t("result.watermarkTypeAnalysis")}</h4>
                     <div className="analysis-grid">
                       {/* 차트 */}
                       <div className="chart-container">
                         <div className="chart-wrapper">
                           <Pie 
                             data={{
-                              labels: ['유니코드 워터마크', 'HTML 엔티티', '특수 패턴'],
+                              labels: [t("result.unicodeWatermark"), t("result.htmlEntity"), t("result.specialPattern")],
                               datasets: [{
                                 data: [
                                   detectionResult.watermarkTypes.unicodeWatermarks,
@@ -332,7 +334,7 @@ function ResultDisplay({
                                 },
                                 title: {
                                   display: true,
-                                  text: '워터마크 유형 분포'
+                                  text: t("result.watermarkTypeAnalysis")
                                 }
                               }
                             }}
@@ -345,14 +347,14 @@ function ResultDisplay({
                         <table className="data-table">
                           <thead>
                             <tr>
-                              <th>워터마크 유형</th>
-                              <th>개수</th>
-                              <th>비율</th>
+                              <th>{t("result.watermarkType")}</th>
+                              <th>{t("result.count")}</th>
+                              <th>{t("result.ratio")}</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
-                              <td>유니코드 워터마크</td>
+                              <td>{t("result.unicodeWatermark")}</td>
                               <td>{detectionResult.watermarkTypes.unicodeWatermarks}개</td>
                               <td>
                                 {totalCount > 0 
@@ -361,7 +363,7 @@ function ResultDisplay({
                               </td>
                             </tr>
                             <tr>
-                              <td>HTML 엔티티</td>
+                              <td>{t("result.htmlEntity")}</td>
                               <td>{detectionResult.watermarkTypes.htmlEntities}개</td>
                               <td>
                                 {totalCount > 0 
@@ -370,7 +372,7 @@ function ResultDisplay({
                               </td>
                             </tr>
                             <tr>
-                              <td>특수 패턴</td>
+                              <td>{t("result.specialPattern")}</td>
                               <td>{detectionResult.watermarkTypes.specialPatterns}개</td>
                               <td>
                                 {totalCount > 0 
@@ -422,7 +424,7 @@ function ResultDisplay({
 
                   {/* 단어 빈도 분석 */}
                   <div className="analysis-section">
-                    <h4>단어 빈도 분석</h4>
+                    <h4>{t("result.wordFrequencyAnalysis")}</h4>
                     <div className="analysis-grid">
                       {/* 차트 */}
                       <div className="chart-container">
@@ -431,7 +433,7 @@ function ResultDisplay({
                             data={{
                               labels: Object.keys(detectionResult.textAnalysis.wordFrequency),
                               datasets: [{
-                                label: '빈도',
+                                label: t("result.frequency"),
                                 data: Object.values(detectionResult.textAnalysis.wordFrequency),
                                 backgroundColor: 'rgba(75, 192, 192, 0.7)',
                                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -454,7 +456,7 @@ function ResultDisplay({
                                 },
                                 title: {
                                   display: true,
-                                  text: '단어 빈도 (상위 10개)'
+                                  text: t("result.wordFrequencyAnalysis")
                                 }
                               }
                             }}
@@ -467,9 +469,9 @@ function ResultDisplay({
                         <table className="data-table">
                           <thead>
                             <tr>
-                              <th>단어</th>
-                              <th>빈도</th>
-                              <th>비율</th>
+                              <th>{t("result.word")}</th>
+                              <th>{t("result.frequency")}</th>
+                              <th>{t("result.ratio")}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -481,7 +483,7 @@ function ResultDisplay({
                               return (
                                 <tr key={index}>
                                   <td>{word}</td>
-                                  <td>{count}회</td>
+                                  <td>{count}</td>
                                   <td>
                                     {totalWordCount > 0 
                                       ? Math.round((count / totalWordCount) * 100)
@@ -498,7 +500,7 @@ function ResultDisplay({
                   
                   {/* 문장 시작 패턴 */}
                   <div className="analysis-section">
-                    <h4>문장 시작 패턴</h4>
+                    <h4>{t("result.sentenceStartPattern")}</h4>
                     <div className="sentence-patterns">
                       {Object.entries(detectionResult.textAnalysis.sentencePatterns).map(([pattern, count], index) => (
                         <div key={index} className="pattern-item">
@@ -523,27 +525,27 @@ function ResultDisplay({
 
     return (
       <div className="result-section">
-        <h2>워터마크 제거 결과</h2>
+        <h2>{t("result.title")}</h2>
 
         <div className="result-card">
           <div className="result-header">
             <h3>
               {isDifferent
-                ? "워터마크가 제거되었습니다."
-                : "제거할 워터마크가 없습니다."}
+                ? t("result.watermarkRemoved")
+                : t("result.noWatermarkToRemove")}
             </h3>
             <button
               className="copy-button"
               onClick={() => copyToClipboard(cleanedText, "cleaned")}
             >
-              {copiedText === "cleaned" ? "복사됨!" : "정리된 텍스트 복사"}
+              {copiedText === "cleaned" ? t("result.copied") : t("remover.button")}
             </button>
           </div>
 
           <div className="result-content">
             <div className="text-comparison">
               <div className="text-panel">
-                <h4>원본 텍스트 (제거된 워터마크 하이라이트)</h4>
+                <h4>{t("result.originalText")}</h4>
                 <div 
                   ref={originalTextRef}
                   className="text-content diff-view"
@@ -551,7 +553,7 @@ function ResultDisplay({
                 ></div>
               </div>
               <div className="text-panel">
-                <h4>정리된 텍스트</h4>
+                <h4>{t("result.cleanedText")}</h4>
                 <div 
                   ref={cleanedTextRef}
                   className="text-content"
@@ -565,7 +567,7 @@ function ResultDisplay({
               <div className="diff-legend">
                 <div className="diff-item">
                   <span className="removed-watermark-sample"></span>
-                  <span>제거된 워터마크</span>
+                  <span>{t("result.removedWatermark")}</span>
                 </div>
               </div>
             )}
