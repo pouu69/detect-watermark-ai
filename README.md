@@ -51,6 +51,43 @@ AI 텍스트 워터마크는 육안으로는 보이지 않지만, 텍스트에 �
 - Node.js 16.0.0 이상
 - npm 또는 yarn
 
+### 파비콘 및 OG 이미지 관리
+
+프로젝트는 다양한 기기와 브라우저에 최적화된 파비콘 세트를 포함하고 있습니다:
+
+- SVG 파비콘 (`public/favicon.svg`)
+- ICO 파비콘 (`public/favicon.ico`)
+- 다양한 크기의 PNG 파비콘 (`public/favicon/favicon-*.png`)
+- Apple Touch Icon (`public/favicon/apple-touch-icon.png`)
+- 웹 앱 매니페스트 (`public/site.webmanifest`)
+
+파비콘을 업데이트하려면:
+
+1. `public/favicon.svg` 파일을 새 디자인으로 교체합니다.
+2. 다음 명령을 실행하여 모든 파비콘 파일을 재생성합니다:
+   ```bash
+   node scripts/generate-favicons.js
+   ```
+
+이 스크립트는 SVG 파일을 기반으로 다양한 크기와 형식의 파비콘을 자동으로 생성합니다.
+
+#### OG 이미지 (소셜 미디어 썸네일)
+
+프로젝트는 소셜 미디어에 공유될 때 표시되는 OG 이미지를 포함하고 있습니다:
+
+- PNG OG 이미지 (`public/og-image.png`) - 1200x630 픽셀 크기
+
+OG 이미지를 업데이트하려면:
+
+1. 기존 파비콘 디자인을 기반으로 새 OG 이미지를 생성하려면 다음 명령을 실행합니다:
+   ```bash
+   node scripts/generate-og-image.js
+   ```
+
+2. 또는 직접 디자인한 이미지를 `public/og-image.png`로 저장합니다. 이미지는 1200x630 픽셀 크기를 권장합니다.
+
+OG 이미지는 Facebook, Twitter, KakaoTalk 등의 소셜 미디어에서 링크를 공유할 때 표시되는 썸네일 이미지입니다.
+
 ### 설치 단계
 
 1. 저장소 클론
