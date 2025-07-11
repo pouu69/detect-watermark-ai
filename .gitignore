@@ -50,3 +50,10 @@ coverage
 
 .github/copilot-instructions.md
 .clinerules
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.tfstate.lock.info
+*.tfstate
+*.tfstate.backup
+*.tfvars
