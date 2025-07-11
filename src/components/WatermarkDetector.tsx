@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { detectWatermarks, DetectionResult, generateWatermarkedText } from "../utils/watermarkUtils";
 import "../styles/WatermarkDetector.scss";
+
+// 워터마크 감지에 필요한 최소 글자수
+const MIN_TEXT_LENGTH = 50;
 
 interface WatermarkDetectorProps {
   inputText: string;
@@ -15,15 +18,27 @@ function WatermarkDetector({
   onDetectionResult,
 }: WatermarkDetectorProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [charCount, setCharCount] = useState<number>(inputText.length);
   const { t } = useTranslation();
+  
+  // 초기 글자수 설정
+  useEffect(() => {
+    setCharCount(inputText.length);
+  }, [inputText]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onInputChange(e.target.value);
+    setCharCount(e.target.value.length);
   };
 
   const handleDetect = () => {
     if (!inputText.trim()) {
       alert(t("detector.placeholder"));
+      return;
+    }
+    
+    if (inputText.trim().length < MIN_TEXT_LENGTH) {
+      alert(t("detector.minCharsWarning", { minChars: MIN_TEXT_LENGTH }));
       return;
     }
 
@@ -70,6 +85,14 @@ function WatermarkDetector({
     <div className="watermark-detector">
       <div className="text-area-container">
         <label htmlFor="input-text">{t("detector.placeholder")}</label>
+        <div className="text-input-info">
+          <span className={`char-count ${charCount < MIN_TEXT_LENGTH ? 'text-warning' : ''}`}>
+            {t("detector.charCount", { count: charCount, minChars: MIN_TEXT_LENGTH })}
+          </span>
+          <span className="min-chars-notice">
+            * {t("detector.minCharsNotice", { minChars: MIN_TEXT_LENGTH })}
+          </span>
+        </div>
         <textarea
           id="input-text"
           value={inputText}
@@ -82,7 +105,7 @@ function WatermarkDetector({
         <button
           className="btn btn-primary"
           onClick={handleDetect}
-          disabled={isLoading || !inputText.trim()}
+          disabled={isLoading || !inputText.trim() || inputText.trim().length < MIN_TEXT_LENGTH}
         >
           {isLoading ? "분석 중..." : t("detector.button")}
         </button>
@@ -90,6 +113,16 @@ function WatermarkDetector({
         <button
           className="btn btn-secondary"
           onClick={() => {
+            if (!inputText.trim()) {
+              alert(t("detector.placeholder"));
+              return;
+            }
+            
+            if (inputText.trim().length < MIN_TEXT_LENGTH) {
+              alert(t("detector.minCharsWarning", { minChars: MIN_TEXT_LENGTH }));
+              return;
+            }
+            
             if (inputText.trim()) {
               const watermarkedText = generateWatermarkedText(inputText);
               console.log("워터마크 추가됨:", watermarkedText);
@@ -137,7 +170,7 @@ function WatermarkDetector({
               alert(t("detector.placeholder"));
             }
           }}
-          disabled={isLoading || !inputText.trim()}
+          disabled={isLoading || !inputText.trim() || inputText.trim().length < MIN_TEXT_LENGTH}
         >
           {t("detector.removeButton")}
         </button>

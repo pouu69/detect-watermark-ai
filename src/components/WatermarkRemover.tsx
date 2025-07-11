@@ -61,7 +61,7 @@ function WatermarkRemover({
           onClick={handleRemove}
           disabled={isLoading || !inputText.trim()}
         >
-          {isLoading ? "처리 중..." : t("remover.button")}
+          {isLoading ? "처리 중..." : t("remover.removeButton")}
         </button>
       </div>
     </div>
