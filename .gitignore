@@ -52,15 +52,7 @@ coverage
 .clinerules
 
 # Terraform
-terraform/.terraform/*
-terraform/.terraform.tfstate.lock.info
+terraform
 *.tfstate
 *.tfstate.backup
 *.tfvars
-.terraform.lock.hcl
-terraform/.terraform.lock.hcl
-terraform/crash.log
-terraform/override.tf
-terraform/override.tf.json
-terraform/*_override.tf
-terraform/*_override.tf.json
