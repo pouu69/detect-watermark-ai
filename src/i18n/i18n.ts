@@ -13,28 +13,21 @@ const resources = {
   },
 };
 
-// Get saved language preference from localStorage or use default
-const savedLanguage = localStorage.getItem('i18nextLng') || "ko";
+// Default language (will be overridden by LanguageContext)
+const defaultLanguage = "ko";
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    lng: savedLanguage, // use saved language or default to Korean
+    lng: defaultLanguage, // will be overridden by LanguageContext
     fallbackLng: "ko",
     interpolation: {
       escapeValue: false, // react already safes from xss
     },
-    // Add localStorage caching
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
-    },
+    // No caching or detection - handled by LanguageContext
   });
 
-// Save language changes to localStorage
-i18n.on('languageChanged', (lng) => {
-  localStorage.setItem('i18nextLng', lng);
-});
+// No need to save language changes
 
 export default i18n;

@@ -9,24 +9,14 @@ type LanguageContextType = {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Helper function to get cookie
-const getCookie = (name: string): string | null => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
-  return null;
-};
-
-// Helper function to set cookie
-const setCookie = (name: string, value: string, days: number = 365): void => {
-  const date = new Date();
-  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  const expires = `; expires=${date.toUTCString()}`;
-  document.cookie = `${name}=${value}${expires}; path=/; SameSite=Lax`;
+// Helper function to detect if language is Korean
+const isKoreanLanguage = (lang: string | null): boolean => {
+  if (!lang) return false;
+  return lang.toLowerCase().startsWith('ko');
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Try to get language from URL parameter, then cookie, then localStorage, then default to i18n language
+  // Try to get language from URL parameter, then browser language, then default to i18n language
   const getInitialLanguage = (): string => {
     try {
       // Check URL parameter first
@@ -34,17 +24,17 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
       const urlLang = urlParams.get('lang');
       if (urlLang && (urlLang === 'en' || urlLang === 'ko')) return urlLang;
       
-      // Then check cookie
-      const cookieLang = getCookie('userLanguage');
-      if (cookieLang) return cookieLang;
+      // Then check browser language
+      const browserLang = window.navigator.language || (window.navigator as any).userLanguage;
       
-      // Then check localStorage
-      const localStorageLang = localStorage.getItem('userLanguage');
-      if (localStorageLang) return localStorageLang;
-      
-      return i18n.language;
+      // Return 'ko' if browser language is Korean, otherwise 'en'
+      if (isKoreanLanguage(browserLang)) {
+        return 'ko';
+      } else {
+        return 'en';
+      }
     } catch (e) {
-      // In case of any errors (e.g., localStorage not available)
+      // In case of any errors
       return i18n.language;
     }
   };
@@ -59,14 +49,6 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
     setLanguage(lang);
-    
-    // Save to both cookie and localStorage for redundancy
-    try {
-      setCookie('userLanguage', lang);
-      localStorage.setItem('userLanguage', lang);
-    } catch (e) {
-      console.error('Error saving language preference:', e);
-    }
   };
 
   return (
